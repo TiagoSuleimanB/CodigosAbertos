@@ -1,0 +1,20 @@
+import pandas as pd
+
+df = pd.read_csv('C:\\CaminhoDoArquivo\\NomeDoArquivo.csv', delimiter=',', encoding='utf-8')
+
+# Converter as colunas para o tipo datetime
+df['Datas1'] = pd.to_datetime(df['Datas2'], errors='coerce')
+df['Datas2'] = pd.to_datetime(df['Datas2'], errors='coerce')
+
+# Calcular a diferença entre as colunas
+df['dia_horas'] = df['Datas2'] - df['Datas1']
+
+# Calcular a diferença total em horas aproximadas
+df['diferenca_em_horas'] = df['dia_horas'].dt.total_seconds() / 3600
+
+# Converter a diferença em horas para o formato "x dias suspenso"
+df['dias_suspenso'] = pd.to_timedelta(df['diferenca_em_horas'], unit='h').dt.days
+
+df = df.drop(columns=['diferenca_em_horas'])
+
+df.to_csv('C:\\CaminhoDoArquivo\\NomeDoArquivo.csv', index=False, sep=',')
